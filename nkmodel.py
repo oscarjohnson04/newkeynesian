@@ -49,14 +49,14 @@ for t in range(T-1):
 time = np.arange(T)
 
 fig = go.Figure()
-fig.add_trace(go.Scatter(x=time, y=100*pi_path, mode="lines+markers", name="Inflation (%)"))
-fig.add_trace(go.Scatter(x=time, y=100*output_gap_path, mode="lines+markers", name="Output gap (%)"))
-fig.add_trace(go.Scatter(x=time, y=100*i_path, mode="lines+markers", name="Interest rate (%)"))
+fig.add_trace(go.Scatter(x=time, y=pi_path, mode="lines+markers", name="Inflation"))
+fig.add_trace(go.Scatter(x=time, y=output_gap_path, mode="lines+markers", name="Output gap"))
+fig.add_trace(go.Scatter(x=time, y=i_path, mode="lines+markers", name="Interest rate"))
 
 fig.update_layout(
     title="Impulse Response in Simple NK Model",
     xaxis_title="Time",
-    yaxis_title="Percent (deviation)",
+    yaxis_title="Value",
     template="plotly_white",
     legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1)
 )
