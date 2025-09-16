@@ -26,7 +26,11 @@ with col3:
   user_phi_y = st.text_input("Enter CB coefficient for Output Gap", "0.5")
   phi_y = float(user_phi_y)
   T = st.number_input("Enter simulation periods", 50)
-  
+
+pi = np.zeros(T)
+output_gap = np.zeros(T)
+i = np.zeros(T)
+
 for t in range(T-1):
     # Expectations = last period values (simple approximation)
     pi[0] = pi
@@ -37,10 +41,10 @@ for t in range(T-1):
     i[t] = real_interest_rate + phi_pi * pi[t] + phi_y * output_gap[t] 
 
     # IS curve
-    output_gap[t] = output_gap_next - (1/sigma) * (i[t] - Epi_next)
+    output_gap[t+1] = output_gap_next - (1/sigma) * (i[t] - Epi_next)
 
     # Phillips curve
-    pi[t] = beta * Epi_next + gamma * output_gap[t] + u[t]
+    pi[t+1] = beta * Epi_next + gamma * output_gap[t] 
 
 time = np.arange(T)
 
