@@ -25,8 +25,7 @@ with col3:
   real_interest_rate = float(user_real_interest_rate)
   user_phi_y = st.text_input("Enter CB coefficient for Output Gap", "0.5")
   phi_y = float(user_phi_y)
-  T_user = st.text_input("Enter simulation periods", "50")
-  T = float(T_user)
+  T = st.number_input("Enter simulation periods", "50")
   
 for t in range(T-1):
     # Expectations = last period values (simple approximation)
