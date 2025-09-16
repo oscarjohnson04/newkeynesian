@@ -30,11 +30,11 @@ with col3:
 pi = np.zeros(T)
 output_gap = np.zeros(T)
 i = np.zeros(T)
+pi[0] = pi
+output_gap[0] = output_gap
 
 for t in range(T-1):
     # Expectations = last period values (simple approximation)
-    pi[0] = pi
-    output_gap[0] = output_gap
     output_gap_next = output_gap[t]
     Epi_next = pi[t]
     # Taylor rule
