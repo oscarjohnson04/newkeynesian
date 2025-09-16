@@ -27,31 +27,31 @@ with col3:
   phi_y = float(user_phi_y)
   T = st.number_input("Enter simulation periods", 50)
 
-pi = np.zeros(T)
-output_gap = np.zeros(T)
-i = np.zeros(T)
-pi[0] = pi
-output_gap[0] = output_gap
+pi_path = np.zeros(T)
+output_gap_path = np.zeros(T)
+i_path = np.zeros(T)
+pi_path[0] = pi
+output_gap_path[0] = output_gap
 
 for t in range(T-1):
     # Expectations = last period values (simple approximation)
-    output_gap_next = output_gap[t]
-    Epi_next = pi[t]
+    output_gap_next = output_gap_path[t]
+    Epi_next = pi_path[t]
     # Taylor rule
-    i[t] = real_interest_rate + phi_pi * pi[t] + phi_y * output_gap[t] 
+    i_path[t] = real_interest_rate + phi_pi * pi_path[t] + phi_y * output_gap_path[t] 
 
     # IS curve
-    output_gap[t+1] = output_gap_next - (1/sigma) * (i[t] - Epi_next)
+    output_gap_path[t+1] = output_gap_next - (1/sigma) * (i_path[t] - Epi_next)
 
     # Phillips curve
-    pi[t+1] = beta * Epi_next + gamma * output_gap[t] 
+    pi_path[t+1] = beta * Epi_next + gamma * output_gap_path[t] 
 
 time = np.arange(T)
 
 fig = go.Figure()
-fig.add_trace(go.Scatter(x=time, y=100*pi, mode="lines+markers", name="Inflation (%)"))
-fig.add_trace(go.Scatter(x=time, y=100*x, mode="lines+markers", name="Output gap (%)"))
-fig.add_trace(go.Scatter(x=time, y=100*i, mode="lines+markers", name="Interest rate (%)"))
+fig.add_trace(go.Scatter(x=time, y=100*pi_path, mode="lines+markers", name="Inflation (%)"))
+fig.add_trace(go.Scatter(x=time, y=100*output_gap_path, mode="lines+markers", name="Output gap (%)"))
+fig.add_trace(go.Scatter(x=time, y=100*i_path, mode="lines+markers", name="Interest rate (%)"))
 
 fig.update_layout(
     title="Impulse Response in Simple NK Model",
