@@ -14,7 +14,7 @@ with col1:
   user_expected_inflation = st.text_input("Enter inflation expectation", "0.1")
   pi = float(user_expected_inflation)
 with col2:
-  user_gamma = st.text_input("Enter weight output gap weight for the Phillips Curve (Value between 0 and 1)", "0.1")
+  user_gamma = st.text_input("Enter output gap weight for the Phillips Curve (Value between 0 and 1)", "0.1")
   gamma = float(user_gamma)
   user_phi_pi = st.text_input("Enter CB coefficient for Inflation", "0.1")
   phi_pi = float(user_phi_pi)
