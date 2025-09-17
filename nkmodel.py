@@ -16,16 +16,19 @@ start = dt.datetime(1950,1,1)
 st.subheader("Parameters")
 col1, col2, col3 = st.columns(3)
 with col1:
+  st.write("Model weights")
   user_sigma = st.text_input("Enter real interest rate weight for output gap (Value between 0 and 1). The lower the value, the higher the weight.", "0.8")
   sigma = float(user_sigma)
   user_gamma = st.text_input("Enter output gap weight for the Phillips Curve (Value between 0 and 1)", "0.8")
   gamma = float(user_gamma)
 with col2:
+  st.write("Taylor Rule Coefficients")
   user_phi_pi = st.text_input("Enter Central Bank coefficient for Inflation", "1.5")
   phi_pi = float(user_phi_pi)
   user_phi_y = st.text_input("Enter Central Bank coefficient for Output Gap", "0.5")
   phi_y = float(user_phi_y)
 with col3:
+  st.write("Simulation Parameter")
   T = st.number_input("Enter simulation periods", 25)
 
 fred = Fred(api_key='00edddc751dd47fb05bd7483df1ed0a3')
