@@ -74,7 +74,7 @@ fig = go.Figure()
 fig.add_trace(go.Scatter(x=time, y=pi_path, mode="lines+markers", name="Inflation"))
 fig.add_trace(go.Scatter(x=time, y=output_gap_path, mode="lines+markers", name="Output gap"))
 fig.add_trace(go.Scatter(x=time, y=i_path, mode="lines+markers", name="Interest rate"))
-fig.add_trace(go.Bar(x=time, y=100*u, name="Shock (%)", opacity=0.3))
+fig.add_trace(go.Bar(x=time, y=u, name="Shock (%)", opacity=0.3))
 
 fig.update_layout(
     title="Impulse Response in Simple NK Model",
