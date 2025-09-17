@@ -90,9 +90,11 @@ fig.add_trace(go.Bar(x=time, y=u, name="Shock (%)", opacity=0.3), secondary_y = 
 fig.update_layout(
     title="Impulse Response in Simple NK Model",
     xaxis_title="Time",
-    yaxis_title="Value",
     template="plotly_white",
     legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1)
 )
+
+fig.update_yaxes(title_text="Inflation and Nominal Interest Rate (%)", secondary_y=False)
+fig.update_yaxes(title_text="Output Gap", secondary_y=True)
 
 st.plotly_chart(fig, use_container_width=True)
