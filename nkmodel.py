@@ -34,7 +34,7 @@ shock_type = st.sidebar.selectbox("Select shock type", ["None", "Single", "Persi
 if shock_type != "None":
   shock_size = st.sidebar.number_input("Shock size (%)", -100.0, 100.0, 1.0) / 100
   shock_time = st.sidebar.number_input("Shock start period")
-  if shock_type = "Persistent":
+  if shock_type == "Persistent":
     shock_duration = st.sidebar.number_input("Shock duration")
 
 u = np.zeros(T)
