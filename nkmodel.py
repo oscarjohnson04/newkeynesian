@@ -32,9 +32,11 @@ st.sidebar.header("Shock Settings")
 shock_location = st.sidebar.selectbox("Shock affects", ["Phillips Curve (Supply Shock)", "IS Curve (Demand Shock)"])
 shock_type = st.sidebar.selectbox("Select shock type", ["None", "Single", "Persistent"])
 if shock_type != "None":
-  shock_size = st.sidebar.number_input("Shock size (%)", -10.0, 10.0, 1.0) / 100
-  shock_time = st.sidebar.number_input("Shock start period", 0, int(T)-1, 5)
-  shock_duration = st.sidebar.number_input("Shock duration (for Persistent)", 1, int(T), 5)
+  shock_size = st.sidebar.number_input("Shock size (%)", -100.0, 100.0, 1.0) / 100
+  shock_time = st.sidebar.number_input("Shock start period")
+  if shock_type = "Persistent":
+    shock_duration = st.sidebar.number_input("Shock duration")
+
 u = np.zeros(T)
 if shock_type == "Single":
     u[shock_time] = shock_size
@@ -56,9 +58,9 @@ for t in range(T-1):
 
     # IS curve
     if shock_location == "IS Curve (Demand Shock)":
-        output_gap_path[t+1] = x_next - (1/sigma) * (i_path[t] - Epi_next) + u[t]
+        output_gap_path[t+1] = output_gap_next - (1/sigma) * (i_path[t] - Epi_next) + u[t]
     else:
-        output_gap_path[t+1] = x_next - (1/sigma) * (i_path[t] - Epi_next)
+        output_gap_path[t+1] = output_gap_next - (1/sigma) * (i_path[t] - Epi_next)
 
     # Phillips curve
     if shock_location == "Phillips Curve (Supply Shock)":
