@@ -14,13 +14,15 @@ end = dt.datetime(2025,1,9)
 start = dt.datetime(1950,1,1)
 
 st.subheader("Parameters")
-col1, col2, col3 = st.columns(3)
+col1, col2, col3, col4 = st.columns(4)
 with col1:
   st.write("**Model weights**")
   user_sigma = st.text_input("Enter real interest rate weight for output gap (Value between 0 and 1). The lower the value, the higher the weight.", "0.8")
   sigma = float(user_sigma)
   user_gamma = st.text_input("Enter output gap weight for the Phillips Curve (Value between 0 and 1)", "0.8")
   gamma = float(user_gamma)
+  user_beta = st.text_input("Enter discount factor for the Phillips Curve (Value between 0 and 1)", "0.8")
+  beta = float(user_beta)
 with col2:
   st.write("**Taylor Rule Coefficients**")
   user_phi_pi = st.text_input("Enter Central Bank coefficient for Inflation", "1.5")
@@ -28,6 +30,12 @@ with col2:
   user_phi_y = st.text_input("Enter Central Bank coefficient for Output Gap", "0.5")
   phi_y = float(user_phi_y)
 with col3:
+  st.write("**Wage Calculation Parameters**")
+  user_theta = st.text_input("Enter Calvo Wage Stickiness (Value between 0 and 1)", "0.75")
+  theta = float(user_theta)
+  user_nse = st.text_input("Labour Supply Elasticity", "1.0")
+  nse = float(user_nse)
+with col4:
   st.write("**Simulation Parameter**")
   T = st.number_input("Enter simulation periods", 25)
 
@@ -54,16 +62,22 @@ if shock_type == "Single":
 elif shock_type == "Persistent":
     u[shock_time:shock_time+shock_duration] = shock_size
 
+lambda = (1 - theta) * (1 - beta * theta) / (theta * (1 + nse))
+
 pi_path = np.zeros(T)
 output_gap_path = np.zeros(T)
 i_path = np.zeros(T)
 pi_path[0] = pi
 output_gap_path[0] = output_gap
+w_path = np.zeros(T)
+pi_w_path = np.zeros(T)
+w_path[0] = 100 
 
 for t in range(T-1):
     # Expectations = last period values (simple approximation)
     output_gap_next = output_gap_path[t]
     Epi_next = pi_path[t]
+    Ewpi_next = pi_w_path[t]
     # Taylor rule
     i_path[t] = real_interest_rate + phi_pi * pi_path[t] + phi_y * output_gap_path[t] 
 
@@ -75,9 +89,13 @@ for t in range(T-1):
 
     # Phillips curve
     if shock_location == "Phillips Curve (Supply Shock)":
-        pi_path[t+1] = Epi_next + gamma * output_gap_path[t] - u[t]
+        pi_path[t+1] = beta * Epi_next + gamma * output_gap_path[t] - u[t]
     else:
-        pi_path[t+1] = Epi_next + gamma * output_gap_path[t]
+        pi_path[t+1] = beta * Epi_next + gamma * output_gap_path[t]
+
+    pi_w_path[t] = beta * Ewpi_next - lambda_w * (w_path[t] - output_gap_path[t])
+  
+    w_path[t+1] = w_path[t] + pi_w_path[t]
 
 time = np.arange(T)
 
@@ -98,4 +116,16 @@ fig.update_layout(
 fig.update_yaxes(title_text="Inflation and Nominal Interest Rate (%)", secondary_y=False)
 fig.update_yaxes(title_text="Output Gap", secondary_y=True)
 
+fig1 = go.Figure()
+fig1.add_trace(go.Scatter(x=time, y=pi_w_path, mode="lines+markers", name="Wage Phillips Curve"))
+fig1.add_trace(go.Scatter(x=time, y=w_path, mode="lines+markers", name="Wage Path (index=100)"))
+fig1.update_layout(
+    title="Timeseries of wages in New Keynesian Model",
+    xaxis_title="Time",
+    yaxis_title="Wages",
+    template="plotly_white",
+    legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1)
+)
+
 st.plotly_chart(fig, use_container_width=True)
+st.plotly_chart(fig1, use_container_width=True)
