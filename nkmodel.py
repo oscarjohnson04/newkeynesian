@@ -72,7 +72,7 @@ for t in range(T-1):
 
     # Phillips curve
     if shock_location == "Phillips Curve (Supply Shock)":
-        pi_path[t+1] = Epi_next + gamma * output_gap_path[t] + u[t]
+        pi_path[t+1] = Epi_next + gamma * output_gap_path[t] - u[t]
     else:
         pi_path[t+1] = Epi_next + gamma * output_gap_path[t]
 
