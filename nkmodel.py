@@ -33,9 +33,9 @@ shock_location = st.sidebar.selectbox("Shock affects", ["Phillips Curve (Supply 
 shock_type = st.sidebar.selectbox("Select shock type", ["None", "Single", "Persistent"])
 if shock_type != "None":
   shock_size = st.sidebar.number_input("Shock size (%)", -100.0, 100.0, 1.0) / 100
-  shock_time = st.sidebar.number_input("Shock start period")
+  shock_time = st.sidebar.number_input("Shock start period", min_value=0, max_value=T-1, value=0, step=1)
   if shock_type == "Persistent":
-    shock_duration = st.sidebar.number_input("Shock duration")
+    shock_duration = st.sidebar.number_input("Shock duration", min_value=0, max_value=T-1, value=0, step=1)
 
 u = np.zeros(T)
 if shock_type == "Single":
