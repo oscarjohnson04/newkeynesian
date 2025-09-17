@@ -30,9 +30,10 @@ with col3:
 
 st.sidebar.header("Shock Settings")
 shock_type = st.sidebar.selectbox("Select shock type", ["None", "Single", "Persistent"])
-shock_size = st.sidebar.number_input("Shock size (%)", -10.0, 10.0, 1.0) / 100
-shock_time = st.sidebar.number_input("Shock start period", 0, int(T)-1, 5)
-shock_duration = st.sidebar.number_input("Shock duration (for Persistent)", 1, int(T), 5)
+if shock_type != "None":
+  shock_size = st.sidebar.number_input("Shock size (%)", -10.0, 10.0, 1.0) / 100
+  shock_time = st.sidebar.number_input("Shock start period", 0, int(T)-1, 5)
+  shock_duration = st.sidebar.number_input("Shock duration (for Persistent)", 1, int(T), 5)
 u = np.zeros(T)
 if shock_type == "Single":
     u[shock_time] = shock_size
