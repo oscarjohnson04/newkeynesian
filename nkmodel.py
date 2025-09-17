@@ -4,6 +4,7 @@ import plotly.graph_objects as go
 from fredapi import Fred
 import pandas as pd
 import datetime as dt
+from statsmodels.api import tsa
 
 st.set_page_config(layout="wide")
 st.title("New Keynesian Model")
