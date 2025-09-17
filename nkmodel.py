@@ -62,7 +62,7 @@ if shock_type == "Single":
 elif shock_type == "Persistent":
     u[shock_time:shock_time+shock_duration] = shock_size
 
-lambda = (1 - theta) * (1 - beta * theta) / (theta * (1 + nse))
+lambda_w = (1 - theta) * (1 - beta * theta) / (theta * (1 + nse))
 
 pi_path = np.zeros(T)
 output_gap_path = np.zeros(T)
