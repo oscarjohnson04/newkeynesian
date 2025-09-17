@@ -29,6 +29,7 @@ with col3:
   T = st.number_input("Enter simulation periods", 1)
 
 st.sidebar.header("Shock Settings")
+shock_location = st.sidebar.selectbox("Shock affects", ["Phillips Curve (Supply Shock)", "IS Curve (Demand Shock)"])
 shock_type = st.sidebar.selectbox("Select shock type", ["None", "Single", "Persistent"])
 if shock_type != "None":
   shock_size = st.sidebar.number_input("Shock size (%)", -10.0, 10.0, 1.0) / 100
@@ -54,10 +55,16 @@ for t in range(T-1):
     i_path[t] = real_interest_rate + phi_pi * pi_path[t] + phi_y * output_gap_path[t] 
 
     # IS curve
-    output_gap_path[t+1] = output_gap_next - (1/sigma) * (i_path[t] - Epi_next)
+    if shock_location == "IS Curve (Demand Shock)":
+        output_gap_path[t+1] = x_next - (1/sigma) * (i_path[t] - Epi_next) + u[t]
+    else:
+        output_gap_path[t+1] = x_next - (1/sigma) * (i_path[t] - Epi_next)
 
     # Phillips curve
-    pi_path[t+1] = beta * Epi_next + gamma * output_gap_path[t] + u[t]
+    if shock_location == "Phillips Curve (Supply Shock)":
+        pi_path[t+1] = beta * Epi_next + gamma * output_gap_path[t] + u[t]
+    else:
+        pi_path[t+1] = beta * Epi_next + gamma * output_gap_path[t]
 
 time = np.arange(T)
 
