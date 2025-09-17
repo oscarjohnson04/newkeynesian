@@ -2,7 +2,7 @@ import streamlit as st
 import numpy as np
 import plotly.graph_objects as go
 from fredapi import Fred
-import pandas pd
+import pandas as pd
 
 st.set_page_config(layout="wide")
 
