@@ -16,18 +16,16 @@ start = dt.datetime(1950,1,1)
 st.subheader("Parameters")
 col1, col2, col3 = st.columns(3)
 with col1:
-  user_beta = st.text_input("Enter Beta (Value between 0 and 1)", "0.1")
-  beta = float(user_beta)
-  user_sigma = st.text_input("Enter Sigma (Value between 0 and 1)", "0.1")
+  user_sigma = st.text_input("Enter real interest rate weight for output gap (Value between 0 and 1). Lower the value, the higher the weight", "0.1")
   sigma = float(user_sigma)
-with col2:
   user_gamma = st.text_input("Enter output gap weight for the Phillips Curve (Value between 0 and 1)", "0.1")
   gamma = float(user_gamma)
+with col2:
   user_phi_pi = st.text_input("Enter CB coefficient for Inflation", "0.1")
   phi_pi = float(user_phi_pi)
-with col3:
   user_phi_y = st.text_input("Enter CB coefficient for Output Gap", "0.1")
   phi_y = float(user_phi_y)
+with col3:
   T = st.number_input("Enter simulation periods", 1)
 
 fred = Fred(api_key='00edddc751dd47fb05bd7483df1ed0a3')
@@ -74,9 +72,9 @@ for t in range(T-1):
 
     # Phillips curve
     if shock_location == "Phillips Curve (Supply Shock)":
-        pi_path[t+1] = beta * Epi_next + gamma * output_gap_path[t] + u[t]
+        pi_path[t+1] = Epi_next + gamma * output_gap_path[t] + u[t]
     else:
-        pi_path[t+1] = beta * Epi_next + gamma * output_gap_path[t]
+        pi_path[t+1] = Epi_next + gamma * output_gap_path[t]
 
 time = np.arange(T)
 
