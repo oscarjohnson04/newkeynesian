@@ -5,6 +5,7 @@ import plotly.graph_objects as go
 st.set_page_config(layout="wide")
 
 st.title("New Keynesian Model")
+st.subheader("Parameters")
 col1, col2, col3 = st.columns(3)
 with col1:
   user_beta = st.text_input("Enter Beta (Value between 0 and 1)", "0.1")
@@ -27,6 +28,17 @@ with col3:
   phi_y = float(user_phi_y)
   T = st.number_input("Enter simulation periods", 1)
 
+st.sidebar.header("Shock Settings")
+shock_type = st.sidebar.selectbox("Select shock type", ["None", "Single", "Persistent"])
+shock_size = st.sidebar.number_input("Shock size (%)", -10.0, 10.0, 1.0) / 100
+shock_time = st.sidebar.number_input("Shock start period", 0, int(T)-1, 5)
+shock_duration = st.sidebar.number_input("Shock duration (for Persistent)", 1, int(T), 5)
+u = np.zeros(T)
+if shock_type == "Single":
+    u[shock_time] = shock_size
+elif shock_type == "Persistent":
+    u[shock_time:shock_time+shock_duration] = shock_size
+
 pi_path = np.zeros(T)
 output_gap_path = np.zeros(T)
 i_path = np.zeros(T)
@@ -44,7 +56,7 @@ for t in range(T-1):
     output_gap_path[t+1] = output_gap_next - (1/sigma) * (i_path[t] - Epi_next)
 
     # Phillips curve
-    pi_path[t+1] = beta * Epi_next + gamma * output_gap_path[t] 
+    pi_path[t+1] = beta * Epi_next + gamma * output_gap_path[t] + u[t]
 
 time = np.arange(T)
 
