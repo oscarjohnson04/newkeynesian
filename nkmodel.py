@@ -1,6 +1,8 @@
 import streamlit as st
 import numpy as np
 import plotly.graph_objects as go
+from fredapi import Fred
+import pandas pd
 
 st.set_page_config(layout="wide")
 
@@ -12,21 +14,23 @@ with col1:
   beta = float(user_beta)
   user_sigma = st.text_input("Enter Sigma (Value between 0 and 1)", "0.1")
   sigma = float(user_sigma)
-  user_expected_inflation = st.text_input("Enter inflation expectation", "0.1")
-  pi = float(user_expected_inflation)
 with col2:
   user_gamma = st.text_input("Enter output gap weight for the Phillips Curve (Value between 0 and 1)", "0.1")
   gamma = float(user_gamma)
   user_phi_pi = st.text_input("Enter CB coefficient for Inflation", "0.1")
   phi_pi = float(user_phi_pi)
-  user_output_gap = st.text_input("Enter initial output gap", "1")
-  output_gap = float(user_output_gap)
 with col3:
-  user_real_interest_rate = st.text_input("Enter real interest rate", "0.1")
-  real_interest_rate = float(user_real_interest_rate)
   user_phi_y = st.text_input("Enter CB coefficient for Output Gap", "0.1")
   phi_y = float(user_phi_y)
   T = st.number_input("Enter simulation periods", 1)
+
+fred = Fred(api_key='00edddc751dd47fb05bd7483df1ed0a3')
+pi = round(fred.get_series("MEDCPIM158SFRBCLE").iloc[-1], 2)
+gdp = fred.get_series('GDPC1', start, end) 
+gdp_cycle, gdp_trend = tsa.filters.hpfilter(gdp)
+output_gap = (gdp_cycle / gdp_trend) * 100
+output_gap = round(output_gap.iloc[-1], 2)
+real_interest_rate = round(fred.get_series("REAINTRATREARAT1MO").iloc[-1], 2)
 
 st.sidebar.header("Shock Settings")
 shock_location = st.sidebar.selectbox("Shock affects", ["Phillips Curve (Supply Shock)", "IS Curve (Demand Shock)"])
@@ -71,10 +75,11 @@ for t in range(T-1):
 time = np.arange(T)
 
 fig = go.Figure()
-fig.add_trace(go.Scatter(x=time, y=pi_path, mode="lines+markers", name="Inflation"))
-fig.add_trace(go.Scatter(x=time, y=output_gap_path, mode="lines+markers", name="Output gap"))
-fig.add_trace(go.Scatter(x=time, y=i_path, mode="lines+markers", name="Interest rate"))
-fig.add_trace(go.Bar(x=time, y=u, name="Shock (%)", opacity=0.3))
+fig = make_subplots(specs=[[{"secondary_y": True}]])
+fig.add_trace(go.Scatter(x=time, y=pi_path, mode="lines+markers", name="Inflation"), secondary_y = False)
+fig.add_trace(go.Scatter(x=time, y=output_gap_path, mode="lines+markers", name="Output gap"), secondary_y = True)
+fig.add_trace(go.Scatter(x=time, y=i_path, mode="lines+markers", name="Interest rate"), secondary_y = False)
+fig.add_trace(go.Bar(x=time, y=u, name="Shock (%)", opacity=0.3), secondary_y = False)
 
 fig.update_layout(
     title="Impulse Response in Simple NK Model",
