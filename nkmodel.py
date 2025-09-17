@@ -3,10 +3,14 @@ import numpy as np
 import plotly.graph_objects as go
 from fredapi import Fred
 import pandas as pd
+import datetime as dt
 
 st.set_page_config(layout="wide")
-
 st.title("New Keynesian Model")
+
+end = dt.datetime(2024,1,1)
+start = dt.datetime(1950,1,1)
+
 st.subheader("Parameters")
 col1, col2, col3 = st.columns(3)
 with col1:
