@@ -5,6 +5,7 @@ from fredapi import Fred
 import pandas as pd
 import datetime as dt
 from statsmodels.api import tsa
+from plotly.subplots import make_subplots
 
 st.set_page_config(layout="wide")
 st.title("New Keynesian Model")
