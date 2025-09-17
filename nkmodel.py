@@ -8,25 +8,25 @@ from statsmodels.api import tsa
 from plotly.subplots import make_subplots
 
 st.set_page_config(layout="wide")
-st.title("New Keynesian Model")
+st.title("US Economy in the New Keynesian Model")
 
-end = dt.datetime(2024,1,1)
+end = dt.datetime(2025,1,9)
 start = dt.datetime(1950,1,1)
 
 st.subheader("Parameters")
 col1, col2, col3 = st.columns(3)
 with col1:
-  user_sigma = st.text_input("Enter real interest rate weight for output gap (Value between 0 and 1). Lower the value, the higher the weight", "0.1")
+  user_sigma = st.text_input("Enter real interest rate weight for output gap (Value between 0 and 1). The lower the value, the higher the weight.", "0.8")
   sigma = float(user_sigma)
-  user_gamma = st.text_input("Enter output gap weight for the Phillips Curve (Value between 0 and 1)", "0.1")
+  user_gamma = st.text_input("Enter output gap weight for the Phillips Curve (Value between 0 and 1)", "0.8")
   gamma = float(user_gamma)
 with col2:
-  user_phi_pi = st.text_input("Enter CB coefficient for Inflation", "0.1")
+  user_phi_pi = st.text_input("Enter Central Bank coefficient for Inflation", "1.5")
   phi_pi = float(user_phi_pi)
-  user_phi_y = st.text_input("Enter CB coefficient for Output Gap", "0.1")
+  user_phi_y = st.text_input("Enter Central Bank coefficient for Output Gap", "0.5")
   phi_y = float(user_phi_y)
 with col3:
-  T = st.number_input("Enter simulation periods", 1)
+  T = st.number_input("Enter simulation periods", 25)
 
 fred = Fred(api_key='00edddc751dd47fb05bd7483df1ed0a3')
 pi = round(fred.get_series("MEDCPIM158SFRBCLE").iloc[-1], 2)
@@ -86,7 +86,7 @@ fig.add_trace(go.Scatter(x=time, y=i_path, mode="lines+markers", name="Interest 
 fig.add_trace(go.Bar(x=time, y=u, name="Shock (%)", opacity=0.3), secondary_y = False)
 
 fig.update_layout(
-    title="Impulse Response in Simple NK Model",
+    title="Timeseries in three equation New Keynesian Model",
     xaxis_title="Time",
     template="plotly_white",
     legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1)
