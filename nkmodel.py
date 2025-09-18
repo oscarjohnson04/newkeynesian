@@ -38,8 +38,8 @@ with col3:
 with col4:
   st.write("**Simulation Parameter**")
   T = st.number_input("Enter simulation periods", 25)
-  shock_std = st.slider("Shock Strength", 0.0, 5.0, 1.0)
-  rho = st.slider("Shock persistence", 0.0, 0.99, 0.5)
+  shock_std = st.slider("Randomness Strength", 0.0, 5.0, 1.0)
+  rho = st.slider("Randomness persistence", 0.0, 0.99, 0.5)
 
 fred = Fred(api_key='00edddc751dd47fb05bd7483df1ed0a3')
 pi = round(fred.get_series("MEDCPIM158SFRBCLE").iloc[-1], 2)
@@ -84,13 +84,13 @@ for t in range(T-1):
     i_path[t] = real_interest_rate + phi_pi * pi_path[t] + phi_y * output_gap_path[t] 
 
     # IS curve
-    if shock_location == "IS Curve (Demand Shock)":
+    if shock_location == "IS Curve (Demand Shock)" or shock_std > 0.0:
         output_gap_path[t+1] = output_gap_next - (1/sigma) * (i_path[t] - Epi_next) + u[t]
     else:
         output_gap_path[t+1] = output_gap_next - (1/sigma) * (i_path[t] - Epi_next)
 
     # Phillips curve
-    if shock_location == "Phillips Curve (Supply Shock)":
+    if shock_location == "Phillips Curve (Supply Shock)" or shock_std > 0.0:
         pi_path[t+1] = beta * Epi_next + gamma * output_gap_path[t] - u[t]
     else:
         pi_path[t+1] = beta * Epi_next + gamma * output_gap_path[t]
