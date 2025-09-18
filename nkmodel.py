@@ -79,7 +79,7 @@ output_gap_path[0] = output_gap
 w_path = np.zeros(T)
 pi_w_path = np.zeros(T)
 pi_w_path[0] = lambda_w * output_gap_path[0] 
-w_path[0] = 100 
+w_path[0] = 100.0 
 
 for t in range(T-1):
     # Expectations = last period values (simple approximation)
