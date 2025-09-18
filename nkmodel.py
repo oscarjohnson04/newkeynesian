@@ -38,6 +38,10 @@ with col3:
 with col4:
   st.write("**Simulation Parameter**")
   T = st.number_input("Enter simulation periods", 25)
+  random_shocks = st.checkbox("Enable Random Shocks")
+  if random_shocks:
+    shock_std = st.sidebar.slider("Shock Strength", 0.0, 5.0, 1.0)
+    rho = st.sidebar.slider("Shock persistence", 0.0, 0.99, 0.5)
 
 fred = Fred(api_key='00edddc751dd47fb05bd7483df1ed0a3')
 pi = round(fred.get_series("MEDCPIM158SFRBCLE").iloc[-1], 2)
@@ -96,6 +100,9 @@ for t in range(T-1):
     pi_w_path[t] = beta * Ewpi_next - lambda_w * (w_path[t] - output_gap_path[t])
   
     w_path[t+1] = w_path[t] + pi_w_path[t]
+
+    u[t] = rho * u[t-1] + np.random.normal(0, shock_std)
+
 
 time = np.arange(T)
 
