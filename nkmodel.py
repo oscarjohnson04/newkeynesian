@@ -58,11 +58,16 @@ if shock_type != "None":
   if shock_type == "Persistent":
     shock_duration = st.sidebar.number_input("Shock duration", min_value=0, max_value=T-1, value=0, step=1)
 
-u = np.zeros(T)
+u_det = np.zeros(T)
 if shock_type == "Single":
-    u[shock_time] = shock_size
+    u_det[shock_time] = shock_size
 elif shock_type == "Persistent":
-    u[shock_time:shock_time+shock_duration] = shock_size
+    u_det[shock_time:shock_time+shock_duration] = shock_size
+u_rand = np.zeros(T)
+for t in range(1, T):
+    u_rand[t] = rho * u_rand[t-1] + np.random.normal(0, shock_std)
+
+u = u_det + u_rand
 
 lambda_w = (1 - theta) * (1 - beta * theta) / (theta * (1 + nse))
 
@@ -73,6 +78,7 @@ pi_path[0] = pi
 output_gap_path[0] = output_gap
 w_path = np.zeros(T)
 pi_w_path = np.zeros(T)
+pi_w_path[0] = lambda_w * output_gap_path[0] 
 w_path[0] = 100 
 
 for t in range(T-1):
@@ -84,20 +90,20 @@ for t in range(T-1):
     i_path[t] = real_interest_rate + phi_pi * pi_path[t] + phi_y * output_gap_path[t] 
 
     # IS curve
-    if shock_location == "IS Curve (Demand Shock)" or shock_std > 0.0:
+    if shock_location == "IS Curve (Demand Shock)":
         output_gap_path[t+1] = output_gap_next - (1/sigma) * (i_path[t] - Epi_next) + u[t]
     else:
         output_gap_path[t+1] = output_gap_next - (1/sigma) * (i_path[t] - Epi_next)
 
     # Phillips curve
-    if shock_location == "Phillips Curve (Supply Shock)" or shock_std > 0.0:
+    if shock_location == "Phillips Curve (Supply Shock)":
         pi_path[t+1] = beta * Epi_next + gamma * output_gap_path[t] - u[t]
     else:
         pi_path[t+1] = beta * Epi_next + gamma * output_gap_path[t]
 
-    pi_w_path[t] = beta * Ewpi_next - lambda_w * (w_path[t] - output_gap_path[t])
+    pi_w_path[t] = beta * Ewpi_next + lambda_w * w_path[t] 
   
-    w_path[t+1] = w_path[t] + pi_w_path[t]
+    w_path[t+1] = w_path[t] * (1 + pi_w_path[t])
 
     u[t] = rho * u[t-1] + np.random.normal(0, shock_std)
 
