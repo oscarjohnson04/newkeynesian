@@ -101,11 +101,9 @@ for t in range(T-1):
     else:
         pi_path[t+1] = beta * Epi_next + gamma * output_gap_path[t]
 
-    pi_w_path[t] = beta * Ewpi_next + lambda_w * w_path[t] 
+    pi_w_path = beta * Ewpi_next - lambda_w * (w_path[t] - output_gap_path[t])
   
-    w_path[t+1] = w_path[t] * (1 + pi_w_path[t])
-
-    u[t] = rho * u[t-1] + np.random.normal(0, shock_std)
+    w_path[t+1] = w_path[t] + pi_w_path[t]
 
 
 time = np.arange(T)
