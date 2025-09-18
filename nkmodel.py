@@ -79,7 +79,7 @@ output_gap_path[0] = output_gap
 w_path = np.zeros(T)
 pi_w_path = np.zeros(T)
 pi_w_path[0] = lambda_w * output_gap_path[0] 
-w_path[0] = 100
+w_path[0] = 1
 
 for t in range(T-1):
     # Expectations = last period values (simple approximation)
@@ -103,7 +103,7 @@ for t in range(T-1):
 
     pi_w_path[t+1] = beta * Ewpi_next - lambda_w * (w_path[t] - output_gap_path[t])
   
-    w_path[t+1] = w_path[t] * (1 + pi_w_path[t])
+    w_path[t+1] = w_path[t] + pi_w_path[t+1]
 
 
 time = np.arange(T)
