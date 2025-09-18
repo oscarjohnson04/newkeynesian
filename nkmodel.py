@@ -51,7 +51,7 @@ real_interest_rate = round(fred.get_series("REAINTRATREARAT1MO").iloc[-1], 2)
 
 st.sidebar.header("Shock Settings")
 shock_location = st.sidebar.selectbox("Shock affects", ["Phillips Curve (Supply Shock)", "IS Curve (Demand Shock)"])
-shock_type = st.sidebar.selectbox("Select shock type", ["None", "Single", "Persistent"])
+shock_type = st.sidebar.selectbox("Select user-determined shock type", ["None", "Single", "Persistent"])
 if shock_type != "None":
   shock_size = st.sidebar.number_input("Shock size (%)", -100.0, 100.0, 1.0)
   shock_time = st.sidebar.number_input("Shock start period", min_value=0, max_value=T-1, value=0, step=1)
