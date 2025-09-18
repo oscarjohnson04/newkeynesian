@@ -38,10 +38,8 @@ with col3:
 with col4:
   st.write("**Simulation Parameter**")
   T = st.number_input("Enter simulation periods", 25)
-  random_shocks = st.checkbox("Enable Random Shocks")
-  if random_shocks:
-    shock_std = st.sidebar.slider("Shock Strength", 0.0, 5.0, 1.0)
-    rho = st.sidebar.slider("Shock persistence", 0.0, 0.99, 0.5)
+  shock_std = st.slider("Shock Strength", 0.0, 5.0, 1.0)
+  rho = st.slider("Shock persistence", 0.0, 0.99, 0.5)
 
 fred = Fred(api_key='00edddc751dd47fb05bd7483df1ed0a3')
 pi = round(fred.get_series("MEDCPIM158SFRBCLE").iloc[-1], 2)
